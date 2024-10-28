@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateItemInput } from './dto/create-item.input';
-import { UpdateItemInput } from './dto/update-item.input';
+import { CreateItemInput } from './dto/inputs/create-item.input';
+import { UpdateItemInput } from './dto/inputs/update-item.input';
+import { Item } from './entities/item.entity';
 
 @Injectable()
 export class ItemsService {
-    create(createItemInput: CreateItemInput) {
+    async create(createItemInput: CreateItemInput): Promise<Item> {
         return 'This action adds a new item';
     }
 
