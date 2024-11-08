@@ -1,9 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
+import { SignUpInput } from '../auth/dto/inputs/signup.input';
 
 @Injectable()
 export class UsersService {
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) {}
+
+    async createUser(signUpInput: SignUpInput): Promise<User> {
+        try {
+            const newUser = this.userRepository.create(signUpInput);
+
+            return await this.userRepository.save(newUser);
+        } catch (error) {
+            throw new BadRequestException(
+                `Error creating user: ${error.message}`,
+            );
+        }
+    }
+
     async findAll(): Promise<User[]> {
         return [];
     }

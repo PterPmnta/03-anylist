@@ -2,7 +2,7 @@ import { AuthResponse } from './dto/types/auth-response.type';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { Query } from '@nestjs/common';
-import { SignUpInput } from './dto/inputs/signup.imput';
+import { SignUpInput } from './dto/inputs/signup.input';
 
 @Resolver()
 export class AuthResolver {
