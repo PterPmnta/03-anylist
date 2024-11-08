@@ -8,8 +8,6 @@ export class AuthService {
     constructor(private readonly usersService: UsersService) {}
 
     async signUp(signupInput: SignUpInput): Promise<AuthResponse> {
-        console.log({ signupInput });
-
         const user = await this.usersService.createUser(signupInput);
 
         const token = 'ABC123';
