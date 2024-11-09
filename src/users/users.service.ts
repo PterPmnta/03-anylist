@@ -46,7 +46,10 @@ export class UsersService {
         try {
             return await this.userRepository.findOneByOrFail({ email });
         } catch (error) {
-            this.handleDBErrors(error);
+            this.handleDBErrors({
+                code: 'error-0001',
+                detail: `${email} not found`,
+            });
         }
     }
 
@@ -60,6 +63,10 @@ export class UsersService {
 
     private handleDBErrors(error: any): never {
         if (error.code === '23505') {
+            throw new BadRequestException(error.detail.replace('Key ', ''));
+        }
+
+        if (error.code === 'error-0001') {
             throw new BadRequestException(error.detail.replace('Key ', ''));
         }
 
