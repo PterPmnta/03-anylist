@@ -65,5 +65,11 @@ export class AuthService {
         return user;
     }
 
-    //async revalidateToken() {}
+    revalidateToken(user: User): AuthResponse {
+        const token = this.getJwtToken(user.id);
+        return {
+            token,
+            user,
+        };
+    }
 }
