@@ -3,6 +3,7 @@ import {
     Injectable,
     InternalServerErrorException,
     Logger,
+    NotFoundException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -50,6 +51,14 @@ export class UsersService {
                 code: 'error-0001',
                 detail: `${email} not found`,
             });
+        }
+    }
+
+    async findOneById(id: string): Promise<User> {
+        try {
+            return await this.userRepository.findOneByOrFail({ id });
+        } catch (error) {
+            throw new NotFoundException(`${id} not found`);
         }
     }
 
