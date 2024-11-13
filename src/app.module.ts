@@ -18,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
             playground: false,
             autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
             plugins: [ApolloServerPluginLandingPageLocalDefault()],
+            includeStacktraceInErrorResponses: false,
         }),
 
         TypeOrmModule.forRoot({
