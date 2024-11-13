@@ -6,6 +6,6 @@ import { ArgsType, Field } from '@nestjs/graphql';
 export class ValidRolesArgs {
     @Field(() => [ValidRoles], { nullable: true })
     @IsArray()
-    //@IsEnum(ValidRoles)
-    roles: string[] = [];
+    //@IsEnum(ValidRoles, { each: true })
+    roles: ValidRoles[] = [];
 }

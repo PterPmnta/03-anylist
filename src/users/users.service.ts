@@ -5,13 +5,14 @@ import {
     Logger,
     NotFoundException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { ArrayContains, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { SignUpInput } from '../auth/dto/inputs/signup.input';
+import { ValidRoles } from './../auth/enums/valid-roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -35,8 +36,14 @@ export class UsersService {
         }
     }
 
-    async findAll(): Promise<User[]> {
-        return [];
+    async findAll(roles: ValidRoles[]): Promise<User[]> {
+        if (roles.length === 0) return await this.userRepository.find();
+
+        return await this.userRepository.find({
+            where: {
+                roles: ArrayContains(roles),
+            },
+        });
     }
 
     async findOne(id: string): Promise<User> {
