@@ -7,6 +7,8 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 import { join } from 'path';
 
 import { ItemsModule } from './items/items.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -16,6 +18,7 @@ import { ItemsModule } from './items/items.module';
             playground: false,
             autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
             plugins: [ApolloServerPluginLandingPageLocalDefault()],
+            includeStacktraceInErrorResponses: false,
         }),
 
         TypeOrmModule.forRoot({
@@ -30,6 +33,8 @@ import { ItemsModule } from './items/items.module';
         }),
 
         ItemsModule,
+        UsersModule,
+        AuthModule,
     ],
     controllers: [],
     providers: [],
