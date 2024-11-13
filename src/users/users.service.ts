@@ -46,10 +46,6 @@ export class UsersService {
         });
     }
 
-    async findOne(id: string): Promise<User> {
-        throw new Error('Find One not implemented');
-    }
-
     async findOneByEmail(email: string): Promise<User> {
         try {
             return await this.userRepository.findOneByOrFail({ email });
