@@ -37,13 +37,24 @@ export class UsersService {
     }
 
     async findAll(roles: ValidRoles[]): Promise<User[]> {
-        if (roles.length === 0) return await this.userRepository.find();
+        if (roles.length === 0)
+            return await this.userRepository.find({
+                /* No es necesario usando el eager o el lazy 
+            relations: {
+                last_updated_by: true,
+            }, */
+            });
 
-        return await this.userRepository.find({
+        const usersList = await this.userRepository.find({
             where: {
                 roles: ArrayContains(roles),
             },
+            relations: {
+                last_updated_by: true,
+            },
         });
+
+        return usersList;
     }
 
     async findOneByEmail(email: string): Promise<User> {
@@ -69,11 +80,12 @@ export class UsersService {
         return `This action updates a #${id} user`;
     }
 
-    async block(id: string): Promise<User> {
+    async block(id: string, adminUser: User): Promise<User> {
         try {
             const user: User = await this.findOneById(id);
 
             user.is_active = false;
+            user.last_updated_by = adminUser;
 
             await this.userRepository.save(user);
 
