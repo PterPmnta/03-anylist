@@ -70,7 +70,17 @@ export class UsersService {
     }
 
     async block(id: string): Promise<User> {
-        throw new Error('Block not implemented');
+        try {
+            const user: User = await this.findOneById(id);
+
+            user.is_active = false;
+
+            await this.userRepository.save(user);
+
+            return user;
+        } catch (error) {
+            this.handleDBErrors(error);
+        }
     }
 
     private handleDBErrors(error: any): never {
