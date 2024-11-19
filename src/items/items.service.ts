@@ -7,6 +7,8 @@ import { CreateItemInput } from './dto/inputs/create-item.input';
 import { UpdateItemInput } from './dto/inputs/update-item.input';
 import { Item } from './entities/item.entity';
 
+import { User } from './../users/entities/user.entity';
+
 @Injectable()
 export class ItemsService {
     constructor(
@@ -14,9 +16,15 @@ export class ItemsService {
         private readonly itemsRepository: Repository<Item>,
     ) {}
 
-    async create(createItemInput: CreateItemInput): Promise<Item> {
+    async create(createItemInput: CreateItemInput, user: User): Promise<Item> {
         try {
-            const newItem = this.itemsRepository.create(createItemInput);
+            console.log('user', user);
+
+            const newItem = this.itemsRepository.create({
+                ...createItemInput,
+                user,
+            });
+
             await this.itemsRepository.save(newItem);
             return newItem;
         } catch (error) {
