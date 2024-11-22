@@ -7,6 +7,8 @@ import { CreateItemInput } from './dto/inputs/create-item.input';
 import { UpdateItemInput } from './dto/inputs/update-item.input';
 import { Item } from './entities/item.entity';
 
+import { User } from './../users/entities/user.entity';
+
 @Injectable()
 export class ItemsService {
     constructor(
@@ -14,9 +16,15 @@ export class ItemsService {
         private readonly itemsRepository: Repository<Item>,
     ) {}
 
-    async create(createItemInput: CreateItemInput): Promise<Item> {
+    async create(createItemInput: CreateItemInput, user: User): Promise<Item> {
         try {
-            const newItem = this.itemsRepository.create(createItemInput);
+            console.log('user', user);
+
+            const newItem = this.itemsRepository.create({
+                ...createItemInput,
+                user,
+            });
+
             await this.itemsRepository.save(newItem);
             return newItem;
         } catch (error) {
@@ -24,18 +32,31 @@ export class ItemsService {
         }
     }
 
-    async findAll(): Promise<Item[]> {
+    async findAll(user: User): Promise<Item[]> {
         //TODO: Paginar, Filtrar, Anidaciones
-        return await this.itemsRepository.find();
+        return await this.itemsRepository.find({
+            where: {
+                user: {
+                    id: user.id,
+                },
+            },
+        });
     }
 
-    async findOne(id: string): Promise<Item> {
+    async findOne(id: string, user: User): Promise<Item> {
         try {
-            const item: Item = await this.itemsRepository.findOneBy({ id });
+            const item: Item = await this.itemsRepository.findOneBy({
+                id,
+                user: {
+                    id: user.id,
+                },
+            });
 
             if (!item) {
                 throw new NotFoundException(`Item not found with id: ${id}`);
             }
+
+            //item.user = user;
 
             return item;
         } catch (error) {
@@ -43,8 +64,13 @@ export class ItemsService {
         }
     }
 
-    async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+    async update(
+        id: string,
+        updateItemInput: UpdateItemInput,
+        user: User,
+    ): Promise<Item> {
         try {
+            await this.findOne(id, user);
             const item = await this.itemsRepository.preload(updateItemInput);
 
             if (!item) {
@@ -55,12 +81,22 @@ export class ItemsService {
         } catch (error) {}
     }
 
-    async remove(id: string): Promise<Item> {
+    async remove(id: string, user: User): Promise<Item> {
         //TODO: soft delete, integridad referencial
 
-        const item = await this.findOne(id);
+        const item = await this.findOne(id, user);
         await this.itemsRepository.remove(item);
 
         return { ...item, id };
+    }
+
+    async itemCount(user: User): Promise<number> {
+        return await this.itemsRepository.count({
+            where: {
+                user: {
+                    id: user.id,
+                },
+            },
+        });
     }
 }

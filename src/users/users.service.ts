@@ -1,3 +1,4 @@
+import { ItemsService } from './../items/items.service';
 import {
     BadRequestException,
     Injectable,
