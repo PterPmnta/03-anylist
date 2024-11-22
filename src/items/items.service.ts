@@ -64,8 +64,13 @@ export class ItemsService {
         }
     }
 
-    async update(id: string, updateItemInput: UpdateItemInput): Promise<Item> {
+    async update(
+        id: string,
+        updateItemInput: UpdateItemInput,
+        user: User,
+    ): Promise<Item> {
         try {
+            await this.findOne(id, user);
             const item = await this.itemsRepository.preload(updateItemInput);
 
             if (!item) {
