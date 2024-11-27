@@ -10,3 +10,4 @@
 4. Levantar la imagen `docker-compose up -d`
 5. Levantar el backend usando `yarn start:dev`
 6. Visitar `localhost:3000/graphql`
+7. Ejecutar la _mutation_ `executeSeed` para llenar la base de datos
