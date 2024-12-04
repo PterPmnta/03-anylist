@@ -36,9 +36,12 @@ export class ItemsService {
 
     async findAll(user: User, paginationArgs: PaginationArgs): Promise<Item[]> {
         //TODO: Paginar, Filtrar, Anidaciones
-        console.log({ paginationArgs });
+
+        const { limit, offset } = paginationArgs;
 
         return await this.itemsRepository.find({
+            take: limit,
+            skip: offset,
             where: {
                 user: {
                     id: user.id,
