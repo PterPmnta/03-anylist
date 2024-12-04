@@ -9,6 +9,8 @@ import { Item } from './entities/item.entity';
 
 import { User } from './../users/entities/user.entity';
 
+import { PaginationArgs } from './../common/dto/args/pagination.args';
+
 @Injectable()
 export class ItemsService {
     constructor(
@@ -32,8 +34,10 @@ export class ItemsService {
         }
     }
 
-    async findAll(user: User): Promise<Item[]> {
+    async findAll(user: User, paginationArgs: PaginationArgs): Promise<Item[]> {
         //TODO: Paginar, Filtrar, Anidaciones
+        console.log({ paginationArgs });
+
         return await this.itemsRepository.find({
             where: {
                 user: {
