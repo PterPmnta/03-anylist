@@ -40,36 +40,28 @@ export class ItemsService {
         paginationArgs: PaginationArgs,
         searchArgs: SearchArgs,
     ): Promise<Item[]> {
-        const { limit, offset } = paginationArgs;
-        const { search } = searchArgs;
+        try {
+            console.log('ingreso');
+            const { limit, offset } = paginationArgs;
+            const { search } = searchArgs;
 
-        const queryBuilder = this.itemsRepository
-            .createQueryBuilder()
-            .take(limit)
-            .skip(offset)
-            .where(`"userId" = :userId`, { userId: user.id });
+            const queryBuilder = this.itemsRepository
+                .createQueryBuilder()
+                .take(limit)
+                .skip(offset)
+                .where(`"userId" = :userId`, { userId: user.id });
 
-        if (search.trim()) {
-            queryBuilder.andWhere(`LOWER(name) ilike :name`, {
-                name: `%${search.toLowerCase()}%`,
-            });
+            if (search?.trim()) {
+                queryBuilder.andWhere(`LOWER(name) ilike :name`, {
+                    name: `%${search.toLowerCase()}%`,
+                });
+            }
+
+            return queryBuilder.getMany();
+        } catch (error) {
+            console.log(error);
+            throw new NotFoundException(`Items not found`);
         }
-
-        return queryBuilder.getMany();
-
-        /* return await this.itemsRepository.find({
-            take: limit,
-            skip: offset,
-            where: {
-                user: {
-                    id: user.id,
-                },
-                name: ILike(`%${search}%`),
-            },
-            relations: {
-                user: true,
-            },
-        }); */
     }
 
     async findOne(id: string, user: User): Promise<Item> {
@@ -85,11 +77,9 @@ export class ItemsService {
                 throw new NotFoundException(`Item not found with id: ${id}`);
             }
 
-            //item.user = user;
-
             return item;
         } catch (error) {
-            console.log(error);
+            throw new NotFoundException(`Item not found with id: ${id}`);
         }
     }
 
