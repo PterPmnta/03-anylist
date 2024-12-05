@@ -1,7 +1,8 @@
+import { SearchArgs } from './../common/dto/args/search.args';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 import { CreateItemInput } from './dto/inputs/create-item.input';
 import { UpdateItemInput } from './dto/inputs/update-item.input';
@@ -34,10 +35,13 @@ export class ItemsService {
         }
     }
 
-    async findAll(user: User, paginationArgs: PaginationArgs): Promise<Item[]> {
-        //TODO: Paginar, Filtrar, Anidaciones
-
+    async findAll(
+        user: User,
+        paginationArgs: PaginationArgs,
+        searchArgs: SearchArgs,
+    ): Promise<Item[]> {
         const { limit, offset } = paginationArgs;
+        const { search } = searchArgs;
 
         return await this.itemsRepository.find({
             take: limit,
@@ -46,6 +50,10 @@ export class ItemsService {
                 user: {
                     id: user.id,
                 },
+                name: ILike(`%${search}%`),
+            },
+            relations: {
+                user: true,
             },
         });
     }
