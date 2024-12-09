@@ -5,6 +5,7 @@
 type List {
   id: ID!
   name: String!
+  user: User!
 }
 
 type User {
@@ -14,9 +15,10 @@ type User {
   roles: [String!]!
   is_active: Boolean!
   last_updated_by: User
-  lists: [List!]!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   itemCount: Int!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  listCount: Int!
 }
 
 type Item {

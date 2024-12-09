@@ -1,5 +1,3 @@
-import { SearchArgs } from './../common/dto/args/search.args';
-import { PaginationArgs } from './../common/dto/args/pagination.args';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 
 import { ListsService } from './lists.service';
@@ -9,9 +7,16 @@ import { UpdateListInput } from './dto/update-list.input';
 
 import { User } from './../users/entities/user.entity';
 
+import { PaginationArgs } from './../common/dto/args/pagination.args';
+import { SearchArgs } from './../common/dto/args/search.args';
+
 import { CurrentUser } from './../auth/decorators/current-user.decorator';
+import { UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
 @Resolver(() => List)
+@UseGuards(JwtAuthGuard)
 export class ListsResolver {
     constructor(private readonly listsService: ListsService) {}
 

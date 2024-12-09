@@ -25,5 +25,6 @@ export class List {
         lazy: true,
     })
     @Index('userId-list-index')
+    @Field(() => User)
     user: User;
 }

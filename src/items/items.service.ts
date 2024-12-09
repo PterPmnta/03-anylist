@@ -2,7 +2,7 @@ import { SearchArgs } from './../common/dto/args/search.args';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateItemInput } from './dto/inputs/create-item.input';
 import { UpdateItemInput } from './dto/inputs/update-item.input';
@@ -29,7 +29,7 @@ export class ItemsService {
             await this.itemsRepository.save(newItem);
             return newItem;
         } catch (error) {
-            console.log(error);
+            throw new NotFoundException(`Error trying to create item.`);
         }
     }
 

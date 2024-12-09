@@ -1,5 +1,3 @@
-import { SearchArgs } from './../common/dto/args/search.args';
-import { PaginationArgs } from './../common/dto/args/pagination.args';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +7,9 @@ import { UpdateListInput } from './dto/update-list.input';
 import { List } from './entities/list.entity';
 
 import { User } from './../users/entities/user.entity';
+
+import { PaginationArgs } from './../common/dto/args/pagination.args';
+import { SearchArgs } from './../common/dto/args/search.args';
 
 @Injectable()
 export class ListsService {
@@ -106,5 +107,15 @@ export class ListsService {
         } catch (error) {
             throw new NotFoundException(`Error trying to delete de list.`);
         }
+    }
+
+    async listCount(user: User): Promise<number> {
+        return await this.listsRepository.count({
+            where: {
+                user: {
+                    id: user.id,
+                },
+            },
+        });
     }
 }
