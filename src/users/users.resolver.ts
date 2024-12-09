@@ -1,3 +1,4 @@
+import { SearchArgs } from './../common/dto/args/search.args';
 import { ItemsService } from './../items/items.service';
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import {
@@ -16,9 +17,13 @@ import { User } from './entities/user.entity';
 import { ValidRolesArgs } from './dto/args/role.arg';
 import { UpdateUserInput } from './dto/update-user.input';
 
+import { Item } from './../items/entities/item.entity';
+
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ValidRoles } from './../auth/enums/valid-roles.enum';
+
+import { PaginationArgs } from './../common/dto/args/pagination.args';
 
 @Resolver(() => User)
 @UseGuards(JwtAuthGuard)
@@ -69,5 +74,13 @@ export class UsersResolver {
         return this.itemsService.itemCount(user);
     }
 
-    //TODO: getListByUser
+    @ResolveField(() => [Item], { name: 'items' })
+    async getItemsByUser(
+        @CurrentUser([ValidRoles.admin]) adminUser: User,
+        @Parent() user: User,
+        @Args() paginationArgs: PaginationArgs,
+        @Args() searchArgs: SearchArgs,
+    ): Promise<Item[]> {
+        return this.itemsService.findAll(user, paginationArgs, searchArgs);
+    }
 }
