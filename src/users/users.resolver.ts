@@ -68,4 +68,6 @@ export class UsersResolver {
     async itemCount(@Parent() user: User): Promise<number> {
         return this.itemsService.itemCount(user);
     }
+
+    //TODO: getListByUser
 }
