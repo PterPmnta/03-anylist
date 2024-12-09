@@ -5,8 +5,11 @@ import {
     Entity,
     Index,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { ListItem } from './../../list-item/entities/list-item.entity';
 
 @Entity('list')
 @ObjectType()
@@ -27,4 +30,8 @@ export class List {
     @Index('userId-list-index')
     @Field(() => User)
     user: User;
+
+    @OneToMany(() => ListItem, (listItem) => listItem.list, { lazy: true })
+    @Field(() => [ListItem])
+    listItem: ListItem[];
 }

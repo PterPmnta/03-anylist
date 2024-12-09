@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ListItemService } from './list-item.service';
@@ -10,7 +10,11 @@ import { ListsModule } from './../lists/lists.module';
 
 @Module({
     providers: [ListItemResolver, ListItemService],
-    imports: [TypeOrmModule.forFeature([ListItem]), ListsModule, ItemsModule],
+    imports: [
+        TypeOrmModule.forFeature([ListItem]),
+        forwardRef(() => ListsModule),
+        forwardRef(() => ItemsModule),
+    ],
     exports: [ListItemService, TypeOrmModule],
 })
 export class ListItemModule {}

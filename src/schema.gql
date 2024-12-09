@@ -2,10 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  item: Item!
+}
+
 type List {
   id: ID!
   name: String!
   user: User!
+  listItem: [ListItem!]!
 }
 
 type User {
@@ -26,17 +34,12 @@ type Item {
   name: String!
   quantity_units: String
   user: User!
+  listItem: [ListItem!]!
 }
 
 type AuthResponse {
   token: String!
   user: User!
-}
-
-type ListItem {
-  id: ID!
-  quantity: Float!
-  completed: Boolean!
 }
 
 type Query {
@@ -45,9 +48,9 @@ type Query {
   user(id: ID!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
+  listItem(id: Int!): ListItem!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: String!): List!
-  listItem(id: Int!): ListItem!
 }
 
 """Lorem Ipsum"""
@@ -65,15 +68,15 @@ type Mutation {
   createIteminput(createItemInput: CreateItemInput!): Item!
   updateiteminput(updateItemInput: UpdateItemInput!): Item!
   removeitem(id: ID!): Item!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
+  removeListItem(id: Int!): ListItem!
   createListInput(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: String!): List!
 
   """Ejecuta la seed"""
   executeSeed: Boolean!
-  createListItem(createListItemInput: CreateListItemInput!): ListItem!
-  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
-  removeListItem(id: Int!): ListItem!
 }
 
 input SignUpInput {
@@ -107,15 +110,6 @@ input UpdateItemInput {
   id: ID!
 }
 
-input CreateListInput {
-  name: String!
-}
-
-input UpdateListInput {
-  name: String
-  id: ID!
-}
-
 input CreateListItemInput {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -125,4 +119,13 @@ input UpdateListItemInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
+}
+
+input CreateListInput {
+  name: String!
+}
+
+input UpdateListInput {
+  name: String
+  id: ID!
 }
