@@ -1,3 +1,6 @@
+import { List } from './../lists/entities/list.entity';
+import { SearchArgs } from './../common/dto/args/search.args';
+import { PaginationArgs } from './../common/dto/args/pagination.args';
 import { Injectable } from '@nestjs/common';
 import { CreateListItemInput } from './dto/create-list-item.input';
 import { UpdateListItemInput } from './dto/update-list-item.input';
@@ -27,9 +30,29 @@ export class ListItemService {
         }
     }
 
-    async findAll(): Promise<ListItem[]> {
+    async findAll(
+        list: List,
+        paginationArgs: PaginationArgs,
+        searchArgs: SearchArgs,
+    ): Promise<ListItem[]> {
         try {
-            return await this.listItemRepository.find({});
+            const { limit, offset } = paginationArgs;
+            const { search } = searchArgs;
+
+            const queryBuilder = this.listItemRepository
+                .createQueryBuilder('listItem')
+                .innerJoinAndSelect('listItem.item', 'item')
+                .take(limit)
+                .skip(offset)
+                .where(`"listId" = :listId`, { listId: list.id });
+
+            if (search) {
+                queryBuilder.andWhere('LOWER(item.name) ilike :name', {
+                    name: `%${search.toLowerCase()}%`,
+                });
+            }
+
+            return await queryBuilder.getMany();
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
@@ -45,5 +68,15 @@ export class ListItemService {
 
     remove(id: number) {
         return `This action removes a #${id} listItem`;
+    }
+
+    countListItems(list: List): Promise<number> {
+        return this.listItemRepository.count({
+            where: {
+                list: {
+                    id: list.id,
+                },
+            },
+        });
     }
 }

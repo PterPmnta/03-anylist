@@ -6,6 +6,7 @@ type ListItem {
   id: ID!
   quantity: Float!
   completed: Boolean!
+  list: List!
   item: Item!
 }
 
@@ -13,7 +14,9 @@ type List {
   id: ID!
   name: String!
   user: User!
+  listItem: [ListItem!]!
   items(offset: Int = 0, limit: Int = 10, search: String): [ListItem!]!
+  totalItems: Float!
 }
 
 type User {
@@ -48,7 +51,6 @@ type Query {
   user(id: ID!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
-  listItem: [ListItem!]!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: String!): List!
 }
