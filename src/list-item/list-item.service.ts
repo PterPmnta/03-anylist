@@ -58,8 +58,12 @@ export class ListItemService {
         }
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} listItem`;
+    async findOne(id: string) {
+        try {
+            return await this.listItemRepository.findOneBy({ id });
+        } catch (error) {
+            throw new Error(`Error: ${error.message}`);
+        }
     }
 
     update(id: number, updateListItemInput: UpdateListItemInput) {
