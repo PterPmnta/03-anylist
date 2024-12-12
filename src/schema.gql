@@ -1,0 +1,136 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ListItem {
+  id: ID!
+  quantity: Float!
+  completed: Boolean!
+  list: List!
+  item: Item!
+}
+
+type List {
+  id: ID!
+  name: String!
+  user: User!
+  items(offset: Int = 0, limit: Int = 10, search: String): [ListItem!]!
+  totalItems: Float!
+}
+
+type User {
+  id: ID!
+  full_name: String!
+  email: String!
+  roles: [String!]!
+  is_active: Boolean!
+  last_updated_by: User
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  itemCount: Int!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  listCount: Int!
+}
+
+type Item {
+  id: ID!
+  name: String!
+  quantity_units: String
+  user: User!
+  listItem: [ListItem!]!
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type Query {
+  revalidateToken: AuthResponse!
+  users(roles: [ValidRoles!] = []): [User!]!
+  user(id: ID!): User!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  item(id: ID!): Item!
+  listItem(id: String!): ListItem!
+  lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
+  list(id: String!): List!
+}
+
+"""Lorem Ipsum"""
+enum ValidRoles {
+  admin
+  user
+  superUser
+}
+
+type Mutation {
+  signup(signupInput: SignUpInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  blockUser(id: ID!): User!
+  createIteminput(createItemInput: CreateItemInput!): Item!
+  updateiteminput(updateItemInput: UpdateItemInput!): Item!
+  removeitem(id: ID!): Item!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
+  createListInput(createListInput: CreateListInput!): List!
+  updateList(updateListInput: UpdateListInput!): List!
+  removeList(id: String!): List!
+
+  """Ejecuta la seed"""
+  executeSeed: Boolean!
+}
+
+input SignUpInput {
+  email: String!
+  full_name: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  email: String
+  full_name: String
+  password: String
+  id: String!
+  roles: [ValidRoles!] = []
+  is_active: Boolean
+}
+
+input CreateItemInput {
+  name: String!
+  quantity_units: String
+}
+
+input UpdateItemInput {
+  name: String
+  quantity_units: String
+  id: ID!
+}
+
+input CreateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
+}
+
+input UpdateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
+  id: ID!
+}
+
+input CreateListInput {
+  name: String!
+}
+
+input UpdateListInput {
+  name: String
+  id: ID!
+}
