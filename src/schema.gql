@@ -14,7 +14,6 @@ type List {
   id: ID!
   name: String!
   user: User!
-  listItem: [ListItem!]!
   items(offset: Int = 0, limit: Int = 10, search: String): [ListItem!]!
   totalItems: Float!
 }
@@ -72,6 +71,7 @@ type Mutation {
   updateiteminput(updateItemInput: UpdateItemInput!): Item!
   removeitem(id: ID!): Item!
   createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
   createListInput(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: String!): List!
@@ -116,6 +116,14 @@ input CreateListItemInput {
   completed: Boolean = false
   listId: ID!
   itemId: ID!
+}
+
+input UpdateListItemInput {
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
+  id: ID!
 }
 
 input CreateListInput {
