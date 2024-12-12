@@ -73,19 +73,18 @@ export class ListItemService {
         try {
             const { listId, itemId, ...rest } = updateListItemInput;
 
-            const listItem: ListItem = await this.listItemRepository.preload({
-                id,
-                ...rest,
-            });
+            const queryBuilder = this.listItemRepository
+                .createQueryBuilder()
+                .update()
+                .set(rest)
+                .where('id = :id', { id });
 
-            if (!listItem) {
-                throw new Error(`List item with id ${id} not found`);
-            }
+            if (listId) queryBuilder.set({ list: { id: listId } });
+            if (itemId) queryBuilder.set({ item: { id: itemId } });
 
-            if (listId) listItem.list = { id: listId } as List;
-            if (itemId) listItem.item = { id: itemId } as List;
+            await queryBuilder.execute();
 
-            return await this.listItemRepository.save(listItem);
+            return this.findOne(id);
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
