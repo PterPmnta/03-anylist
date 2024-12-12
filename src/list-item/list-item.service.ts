@@ -24,7 +24,8 @@ export class ListItemService {
                 item: { id: itemId },
                 list: { id: listId },
             });
-            return await this.listItemRepository.save(listItem);
+            await this.listItemRepository.save(listItem);
+            return await this.findOne(listItem.id);
         } catch (error) {
             throw new Error(`Error: ${error.message}`);
         }
