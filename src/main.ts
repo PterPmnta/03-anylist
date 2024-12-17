@@ -15,4 +15,9 @@ async function bootstrap() {
     await app.listen(process.env.PORT || 3000);
     console.log(`Server running on port ${process.env.PORT || 3000}`);
 }
-bootstrap();
+bootstrap()
+    .then(() => console.log('Server started successfully'))
+    .catch((error) => {
+        console.error('Error starting server:', error);
+        process.exit(1);
+    });
