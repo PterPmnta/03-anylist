@@ -18,6 +18,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        image: pterpmntam/nest-graphql-prod
         container_name: AnylistApp
         ports:
             - '${PORT}:${PORT}'
